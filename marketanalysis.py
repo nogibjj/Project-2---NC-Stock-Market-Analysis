@@ -20,18 +20,23 @@ def stockData(stockList):
                 iteration = 1
                 pass
             case 1:
-                stockDf[stocks.split('/')[-1].split('.')[0]] = pd.read_csv(
+                stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
                     stocks,
                     parse_dates=["Date"],
                     infer_datetime_format=True,
                     index_col="Date",
                 )["Close"]
-                stockDf[stockList[0].split('/')[-1].split('.')[0]] = stockDf["Close"]
-                stockDf = stockDf.loc[:, list(map(lambda x: x.split('/')[-1].split('.')[0], stockList[:2]))[:2]]
+                stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
+                stockDf = stockDf.loc[
+                    :,
+                    list(map(lambda x: x.split("/")[-1].split(".")[0], stockList[:2]))[
+                        :2
+                    ],
+                ]
                 iteration = 2
                 pass
             case 2:
-                stockDf[stocks.split('/')[-1].split('.')[0]] = pd.read_csv(
+                stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
                     stocks,
                     parse_dates=["Date"],
                     infer_datetime_format=True,
@@ -40,8 +45,8 @@ def stockData(stockList):
                 pass
         pass
     if len(stockList) < 2:
-        stockDf[stockList[0].split('/')[-1].split('.')[0]] = stockDf["Close"]
-        return stockDf[stockList[0].split('/')[-1].split('.')[0]]
+        stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
+        return stockDf[stockList[0].split("/")[-1].split(".")[0]]
     else:
         return stockDf
 
