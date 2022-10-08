@@ -3,6 +3,8 @@
 # A simple command line interface for the market analysis package
 
 case $1 in 
+    
+    # Show the help message
     -h | --help)
     echo "Usage: cli.sh [option] [stock] [stock] [stock] [stock] [stock]"
     echo "Options:"
@@ -10,10 +12,14 @@ case $1 in
     echo "  download_data: Download the data from Kaggle"
     echo "  analysis: Run the analysis on the data"
     ;;
+    
+    # Download the data from Kaggle
     "download_data")
     echo "Downloading data"
     kaggle datasets download -p datasets --unzip paultimothymooney/stock-market-data
     ;;
+    
+    # Find the best portfolios
     "analysis")
     echo "Running analysis"
     # Find the paths to each of the stocks
