@@ -17,6 +17,7 @@ def stockData(stockList):
                     parse_dates=["Date"],
                     infer_datetime_format=True,
                     index_col="Date",
+                    dayfirst=True,
                 )
                 iteration = 1
                 pass
@@ -26,6 +27,7 @@ def stockData(stockList):
                     parse_dates=["Date"],
                     infer_datetime_format=True,
                     index_col="Date",
+                    dayfirst=True,
                 )["Close"]
                 stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
                 stockDf = stockDf.loc[
@@ -42,10 +44,11 @@ def stockData(stockList):
                     parse_dates=["Date"],
                     infer_datetime_format=True,
                     index_col="Date",
+                    dayfirst=True,
                 )["Close"]
                 pass
         pass
-    return stockDf
+    return stockDf.dropna()
 
 
 # Transform data to %Change returns
