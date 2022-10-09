@@ -7,6 +7,7 @@ import pandas as pd
 
 # Read in the data
 def stockData(stockList):
+    assert len(stockList) >= 2, f'Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}.'
     iteration = 0
     for stocks in stockList:
         match iteration:
@@ -44,11 +45,7 @@ def stockData(stockList):
                 )["Close"]
                 pass
         pass
-    if len(stockList) < 2:
-        stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
-        return stockDf[stockList[0].split("/")[-1].split(".")[0]]
-    else:
-        return stockDf
+    return stockDf
 
 
 # Transform data to %Change returns

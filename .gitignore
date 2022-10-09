@@ -133,3 +133,5 @@ dmypy.json
 *.csv
 datasets/
 downloads/
+kaggle.json
+.pylintrc

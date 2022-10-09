@@ -1,0 +1,6 @@
+downloads/
+datasets/
+Python*
+__pycache__
+*.ipynb
+.pylintrc
