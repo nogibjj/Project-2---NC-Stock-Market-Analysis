@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Make a .kaggle directory and copy the kaggle.json file
 RUN mkdir ~/.kaggle
-RUN cp kaggle.json ~/.kaggle/kaggle.json
+RUN mv kaggle.json ~/.kaggle/kaggle.json
 
 # Download the dataset
 RUN ./marketanalysis.sh download_data
