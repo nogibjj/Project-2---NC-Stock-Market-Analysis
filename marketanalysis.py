@@ -90,12 +90,14 @@ def portfolioAnalysis(stockList, randomPortfolios=500):
     # Make 500 random portfolios from the stock list
     for portfolios in range(0, randomPortfolios):
         remainder = 1.0
-        for eachStock in data.columns[:-1]:
+        shuffledStocks = list(data.columns)
+        random.shuffle(shuffledStocks)
+        for eachStock in shuffledStocks[:-1]:
             proportion = round(random.uniform(0, remainder - 0.01), 2)
             portfolioProportions[portfolios][eachStock] = proportion
             remainder = remainder - proportion
             pass
-        portfolioProportions[portfolios][data.columns[-1]] = round(remainder, 2)
+        portfolioProportions[portfolios][shuffledStocks[-1]] = round(remainder, 2)
         pass
         # Scale the data based on the portfolio proportions
         scaledData = scaleData(data, portfolioProportions[portfolios])
