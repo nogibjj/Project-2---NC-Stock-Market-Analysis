@@ -7,7 +7,9 @@ import pandas as pd
 
 # Read in the data
 def stockData(stockList):
-    assert len(stockList) >= 2, f'Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}.'
+    assert (
+        len(stockList) >= 2
+    ), f"Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}."
     iteration = 0
     for stocks in stockList:
         match iteration:
