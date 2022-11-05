@@ -68,8 +68,8 @@ if __name__ == "__main__":
     import time
 
     start = time.time()
-    # pathList()
-    # createdb()
+    pathList()
+    createdb()
     # Select the first stock in the list for testing
     stock = (
         str(pd.read_csv("datasets/stockPaths.csv", header=0, nrows=1).loc[0])
