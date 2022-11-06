@@ -71,28 +71,27 @@ def stockSQLdata(stockList):
     )
     connection = engine.connect()
     for stocks in stockList:
-        match iteration:
-            case 0:
-                stockDf = pd.read_sql(
+        if iteration == 0:
+            stockDf = pd.read_sql(
+                f"SELECT date, close FROM {stocks}_performance;",
+                connection,
+                index_col="date",
+            )
+            stockDf = stockDf.rename(columns={"close": stocks})
+            iteration = 1
+            pass
+        else:
+            stockDf = stockDf.merge(
+                pd.read_sql(
                     f"SELECT date, close FROM {stocks}_performance;",
                     connection,
                     index_col="date",
-                )
-                stockDf = stockDf.rename(columns={"close": stocks})
-                iteration = 1
-                pass
-            case 1:
-                stockDf = stockDf.merge(
-                    pd.read_sql(
-                        f"SELECT date, close FROM {stocks}_performance;",
-                        connection,
-                        index_col="date",
-                    ),
-                    how="outer",
-                    on="date",
-                )
-                stockDf = stockDf.rename(columns={"close": stocks})
-                pass
+                ),
+                how="outer",
+                on="date",
+            )
+            stockDf = stockDf.rename(columns={"close": stocks})
+            pass
         pass
     return stockDf.dropna()
 
