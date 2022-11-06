@@ -4,8 +4,10 @@
 # Import the necessary packages
 import random
 import pandas as pd
+import os
+from sqlalchemy import create_engine
 
-# Read in the data
+# Read in the data from csv files
 def stockData(stockList):
     assert (
         len(stockList) >= 2
@@ -53,6 +55,45 @@ def stockData(stockList):
     return stockDf.dropna()
 
 
+# Read in the data from sql database
+def stockSQLdata(stockList):
+    assert (
+        len(stockList) >= 2
+    ), f"Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}."
+    iteration = 0
+    username = os.getenv("AWS_STOCKDB_USERNAME")
+    password = os.getenv("AWS_STOCKDB_PASSWORD")
+    hostname = os.getenv("AWS_STOCKDB_HOSTNAME")
+    port = os.getenv("AWS_STOCKDB_PORT")
+    database = "stock_performance"
+    engine = create_engine(
+        f"mysql://{username}:{password}@{hostname}:{port}/{database}"
+    )
+    connection = engine.connect()
+    for stocks in stockList:
+        match iteration:
+            case 0:
+                stockDf = pd.read_sql(
+                    f"SELECT date, close FROM {stocks}_performance;", connection,
+                    index_col="date"
+                )
+                stockDf = stockDf.rename(columns = {'close': stocks})
+                iteration = 1
+                pass
+            case 1:
+                stockDf = stockDf.merge(
+                    pd.read_sql(
+                        f"SELECT date, close FROM {stocks}_performance;", connection, index_col="date"
+                    ),
+                    how="outer",
+                    on="date",
+                )
+                stockDf = stockDf.rename(columns = {'close': stocks})
+                pass
+        pass
+    return stockDf.dropna()
+
+
 # Transform data to %Change returns
 def pctChange(stockDf):
     for eachCol in stockDf:
@@ -84,7 +125,8 @@ def expectedRisk(scaledData):
 # Analyze the risk and return of 500 random portfolios in the stock list
 def portfolioAnalysis(stockList, randomPortfolios=500):
     # Read in the data
-    data = pctChange(stockData(stockList))
+    # data = pctChange(stockData(stockList))
+    data = pctChange(stockSQLdata(stockList))
     # Make an empty list of empty dictionaries
     portfolioProportions = [{} for i in range(randomPortfolios)]
     averageReturns = []
@@ -122,3 +164,8 @@ def efficientFrontier(portfolioDF):
         portfolioDF.loc[:, "Average Return"] / portfolioDF.loc[:, "Expected Risk"]
     )
     return portfolioDF.sort_values("Risk Return Ratio", ascending=False).head(15)
+
+
+if __name__ == "__main__":
+    stockList = ["AAPL", "AMZN", "MSFT"]
+    print(efficientFrontier(portfolioAnalysis(stockList)))
