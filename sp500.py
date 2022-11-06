@@ -1,10 +1,20 @@
 import pandas as pd
-import marketanalysis
 import sqlite3
 from datasets import Dataset
+import mysql.connector
+from sqlalchemy import create_engine
+import os
 
 sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]
-connection = sqlite3.connect("datasets/data.db")
+
+username = os.getenv("AWS_STOCKDB_USERNAME")
+password = os.getenv("AWS_STOCKDB_PASSWORD")
+hostname = os.getenv("AWS_STOCKDB_HOSTNAME")
+port = os.getenv("AWS_STOCKDB_PORT")
+database = "stock_performance"
+
+engine = create_engine(f"mysql://{username}:{password}@{hostname}:{port}/{database}")
+connection = engine.connect()
 
 firstStock = sp500.loc[0, "Symbol"]
 df = pd.read_sql(

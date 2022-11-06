@@ -4,7 +4,8 @@ from databricks_cli.clusters.api import ClusterApi
 
 
 api_client = ApiClient(
-    host=os.getenv("DATABRICKS_PROJECT_3_HOSTNAME"), token=os.getenv("DATABRICKS_PROJECT_3_TOKEN")
+    host=os.getenv("DATABRICKS_PROJECT_3_HOSTNAME"),
+    token=os.getenv("DATABRICKS_PROJECT_3_TOKEN"),
 )
 
 clusters_api = ClusterApi(api_client)

@@ -2,34 +2,32 @@ import sqlite3
 import pandas as pd
 import os
 import subprocess
-
-
-# # Create a database and table to store the stock performance information
-# def createdb():
-#     connection = sqlite3.connect("datasets/data.db")
-#     stockPaths = pd.read_csv("datasets/stockPaths.csv", header=0)
-#     for eachStock in stockPaths.index:
-#         try:
-#             stockPath = stockPaths.loc[eachStock][0]
-#             stock = stockPath.split("/")[-1].split(".")[0]
-#             stockData = pd.read_csv(
-#                 stockPath,
-#                 header=0,
-#                 parse_dates=["Date"],
-#                 infer_datetime_format=True,
-#                 dayfirst=True,
-#             )
-#             stockData.to_sql(
-#                 f"{stock}_performance", connection, if_exists="replace", index=False
-#             )
-#             pass
-#         except:
-#             print(f"Error: {stock} not added to database")
-#             continue
-
-
 import mysql.connector
 from sqlalchemy import create_engine
+
+
+# Create a database and table to store the stock performance information
+def createSQLitedb():
+    connection = sqlite3.connect("datasets/data.db")
+    stockPaths = pd.read_csv("datasets/stockPaths.csv", header=0)
+    for eachStock in stockPaths.index:
+        try:
+            stockPath = stockPaths.loc[eachStock][0]
+            stock = stockPath.split("/")[-1].split(".")[0]
+            stockData = pd.read_csv(
+                stockPath,
+                header=0,
+                parse_dates=["Date"],
+                infer_datetime_format=True,
+                dayfirst=True,
+            )
+            stockData.to_sql(
+                f"{stock}_performance", connection, if_exists="replace", index=False
+            )
+            pass
+        except:
+            print(f"Error: {stock} not added to database")
+            continue
 
 
 def createdb(database, username, passwd, hostname, portnum):
@@ -115,16 +113,13 @@ def pathList():
 
 
 if __name__ == "__main__":
-    import time
-
-    start = time.time()
     myuser = os.getenv("AWS_STOCKDB_USERNAME")
     mypassword = os.getenv("AWS_STOCKDB_PASSWORD")
-    myhost = os.getenv("a")
+    myhost = os.getenv("AWS_STOCKDB_HOSTNAME")
     myport = os.getenv("AWS_STOCKDB_PORT")
     database = "stock_performance"
-    # pathList()
-    # createdb(database, myuser, mypassword, myhost, myport)
+    pathList()
+    createdb(database, myuser, mypassword, myhost, myport)
     updateTables(database, myuser, mypassword, myhost, myport)
     # Select the first stock in the list for testing
     stock = (
@@ -133,4 +128,3 @@ if __name__ == "__main__":
         .split(".")[0]
     )
     selectData(stock, database, myuser, mypassword, myhost, myport)
-    print(f"Time taken: {time.time() - start}")
