@@ -57,5 +57,5 @@ plotTop = (
 
 st.altair_chart(plot + plotTop, use_container_width=True)
 
-st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
+st.subheader(f"The 15 portfolios with the best risk/reward ratio (as shown in red above) for the selected stocks ({stocks}) are:")
 st.table(top15)
