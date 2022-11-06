@@ -1,6 +1,6 @@
 import streamlit as st
 import subprocess
-# import marketanalysis
+import marketanalysis
 
 st.title(r"Nick Carroll's Efficient Frontier App")
 
