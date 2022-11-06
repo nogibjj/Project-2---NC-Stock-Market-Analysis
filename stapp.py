@@ -40,7 +40,7 @@ st.subheader(
 plot = (
     alt.Chart(analysis)
     .mark_point()
-    .encode(x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y="Average Return")
+    .encode(x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y="Average Return", tooltip = "Portfolio Make-up")
     .interactive()
 )
 
@@ -54,26 +54,8 @@ plotTop = (
     )
 )
 
-hover = alt.selection_single(
-    fields=["Portfolio Make-up"],
-    nearest=True,
-    on="mouseover",
-    empty="none",
-)
 
-tooltips = (
-    alt.Chart(analysis)
-    .mark_rule()
-    .encode(
-        x=alt.X("Expected Risk", scale=alt.Scale(zero=False)),
-        y="Average Return",
-        opacity=alt.condition(hover, alt.value(0.3), alt.value(0)),
-        tooltip=[alt.Tooltip("Portfolio Make-up", title="Portfolio Make-up")],
-    )
-    .add_selection(hover)
-)
-
-st.altair_chart(plot + plotTop + tooltips, use_container_width=True)
+st.altair_chart(plot, use_container_width=True)
 
 st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
 st.table(top15)
