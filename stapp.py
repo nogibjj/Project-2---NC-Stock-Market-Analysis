@@ -1,5 +1,6 @@
 import streamlit as st
-import marketanalysis
+import subprocess
+# import marketanalysis
 
 st.title(r"Nick Carroll's Efficient Frontier App")
 
@@ -32,4 +33,12 @@ stocks = st.text_input(
 
 st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
 
-st.table(efficientFrontier(portfolioAnalysis(stocks)))
+import sys
+
+result = subprocess.run(
+    ["ls"], capture_output=True, text=True
+)
+print("stdout:", result.stdout)
+print("stderr:", result.stderr)
+
+# st.table(efficientFrontier(portfolioAnalysis(stocks)))
