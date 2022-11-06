@@ -36,12 +36,12 @@ top15 = marketanalysis.efficientFrontier(analysis)
 st.subheader(f"The efficient frontier for the chosen stocks ({stocks}) is plotted below:")
 
 plot = alt.Chart(analysis).mark_point().encode(
-    x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y='Average Return', tooltip="Portfolio Make-up").interactive()
+    x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y='Average Return', tooltip="Portfolio Make-up")
 
 plotTop = alt.Chart(top15).mark_point().encode(x=alt.X(
     "Expected Risk", scale=alt.Scale(zero=False)), y='Average Return', color=alt.value('red'))
 
-st.altair_chart((plot + plotTop).display(), use_container_width=True)
+st.altair_chart(plot, use_container_width=True)
 
 st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
 st.table(top15)
