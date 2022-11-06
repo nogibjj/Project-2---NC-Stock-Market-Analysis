@@ -1,6 +1,7 @@
 import streamlit as st
 import subprocess
 import marketanalysis
+import altair as alt
 
 st.title(r"Nick Carroll's Efficient Frontier App")
 
@@ -29,8 +30,14 @@ stocks = st.text_input(
     "AMZN AAPL MSFT",
 ).split(' ')
 
+analysis = marketanalysis.portfolioAnalysis(stocks)
 
+st.subheader(f"The efficient frontier for the chosen stocks ({stocks}) is plotted below:")
+
+plot = alt.Chart(analysis).mark_circle().encode(
+    x='Expected Risk', y='Average Return')
+
+st.altair_chart(plot, use_container_width=True)
 
 st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
-
-st.table(marketanalysis.efficientFrontier(marketanalysis.portfolioAnalysis(stocks)))
+st.table(marketanalysis.efficientFrontier(analysis))
