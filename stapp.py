@@ -62,7 +62,7 @@ hover = alt.selection_single(
 )
 
 tooltips = (
-    alt.Chart(data)
+    alt.Chart(analysis)
     .mark_rule()
     .encode(
         x=alt.X("Expected Risk", scale=alt.Scale(zero=False)),
