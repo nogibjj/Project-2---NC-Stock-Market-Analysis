@@ -1,12 +1,56 @@
 import sqlite3
 import pandas as pd
+import os
 import subprocess
 
 
-# Create a database and table to store the stock performance information
-def createdb():
-    connection = sqlite3.connect("datasets/data.db")
-    stockPaths = pd.read_csv("datasets/stockPaths.csv", header=0)
+# # Create a database and table to store the stock performance information
+# def createdb():
+#     connection = sqlite3.connect("datasets/data.db")
+#     stockPaths = pd.read_csv("datasets/stockPaths.csv", header=0)
+#     for eachStock in stockPaths.index:
+#         try:
+#             stockPath = stockPaths.loc[eachStock][0]
+#             stock = stockPath.split("/")[-1].split(".")[0]
+#             stockData = pd.read_csv(
+#                 stockPath,
+#                 header=0,
+#                 parse_dates=["Date"],
+#                 infer_datetime_format=True,
+#                 dayfirst=True,
+#             )
+#             stockData.to_sql(
+#                 f"{stock}_performance", connection, if_exists="replace", index=False
+#             )
+#             pass
+#         except:
+#             print(f"Error: {stock} not added to database")
+#             continue
+
+
+import mysql.connector
+from sqlalchemy import create_engine
+
+
+def createdb(database, username, passwd, hostname, portnum):
+    connection = mysql.connector.connect(
+        user=username, password=passwd, host=hostname, port=portnum
+    )
+    cursor = connection.cursor()
+    try:
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
+    except mysql.connector.Error as err:
+        print(f"Failed creating database: {err}")
+        exit(1)
+        pass
+    connection.close()
+
+
+# Create a table to store the stock performance information
+def updateTables(dbname, username, passwd, hostname, portnum):
+    engine = create_engine(f"mysql://{username}:{passwd}@{hostname}:{portnum}/{dbname}")
+    connection = engine.connect()
+    stockPaths = pd.read_csv("datasets/stockPaths.csv", header=0, nrows=1)
     for eachStock in stockPaths.index:
         try:
             stockPath = stockPaths.loc[eachStock][0]
@@ -18,6 +62,7 @@ def createdb():
                 infer_datetime_format=True,
                 dayfirst=True,
             )
+            print(stockData.head())
             stockData.to_sql(
                 f"{stock}_performance", connection, if_exists="replace", index=False
             )
@@ -25,15 +70,20 @@ def createdb():
         except:
             print(f"Error: {stock} not added to database")
             continue
+        pass
 
 
 # Select the first ten rows of the table for a given stock for testing purposes
-def selectData(stock):
-    connection = sqlite3.connect("datasets/data.db")
+def selectData(stock, dbname, username, passwd, hostname, portnum):
+    connection = mysql.connector.connect(
+        user=username, password=passwd, host=hostname, port=portnum, database=dbname
+    )
     cursor = connection.cursor()
-    select_query = f"SELECT * FROM {stock}_performance LIMIT 10"
-    for eachRow in cursor.execute(select_query):
+    select_query = f"SELECT * FROM {stock}_performance LIMIT 10;"
+    cursor.execute(select_query)
+    for eachRow in cursor:
         print(eachRow)
+    connection.close()
 
 
 # Create a list of file paths for each stock (selecting only unique stocks) and storing in csv
@@ -68,13 +118,19 @@ if __name__ == "__main__":
     import time
 
     start = time.time()
-    pathList()
-    createdb()
+    myuser = os.getenv("AWS_STOCKDB_USERNAME")
+    mypassword = os.getenv("AWS_STOCKDB_PASSWORD")
+    myhost = os.getenv("a")
+    myport = os.getenv("AWS_STOCKDB_PORT")
+    database = "stock_performance"
+    # pathList()
+    # createdb(database, myuser, mypassword, myhost, myport)
+    updateTables(database, myuser, mypassword, myhost, myport)
     # Select the first stock in the list for testing
     stock = (
         str(pd.read_csv("datasets/stockPaths.csv", header=0, nrows=1).loc[0])
         .split("/")[-1]
         .split(".")[0]
     )
-    selectData("TNC")
+    selectData(stock, database, myuser, mypassword, myhost, myport)
     print(f"Time taken: {time.time() - start}")
