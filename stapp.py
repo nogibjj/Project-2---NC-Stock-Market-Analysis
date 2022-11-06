@@ -41,4 +41,4 @@ result = subprocess.run(
 st.subheader(f"stdout: {result.stdout}")
 st.subheader(f"stderr: {result.stdout}")
 
-st.table(efficientFrontier(portfolioAnalysis(stocks)))
+st.table(marketanalysis.efficientFrontier(marketanalysis.portfolioAnalysis(stocks)))
