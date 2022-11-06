@@ -5,23 +5,23 @@ import marketanalysis
 st.title(r"Nick Carroll's Efficient Frontier App")
 
 
-def frontier(stocks):
-    # Run the script
-    stockList = stocks.split(" ")
-    files = []
-    for eachStock in stockList:
-        files.append(
-            subprocess.run(
-                ["find", ".", "-name", f"{eachStock}.csv"],
-                capture_output=True,
-                check=True,
-            )
-            .stdout.decode()
-            .split("\n")[0]
-        )
-        pass
-    # Return the result
-    return efficientFrontier(portfolioAnalysis(files))
+# def frontier(stocks):
+#     # Run the script
+#     stockList = stocks.split(" ")
+#     files = []
+#     for eachStock in stockList:
+#         files.append(
+#             subprocess.run(
+#                 ["find", ".", "-name", f"{eachStock}.csv"],
+#                 capture_output=True,
+#                 check=True,
+#             )
+#             .stdout.decode()
+#             .split("\n")[0]
+#         )
+#         pass
+#     # Return the result
+#     return efficientFrontier(portfolioAnalysis(files))
 
 
 stocks = st.text_input(
@@ -41,4 +41,4 @@ result = subprocess.run(
 st.subheader(f"stdout: {result.stdout}")
 st.subheader(f"stderr: {result.stdout}")
 
-# st.table(efficientFrontier(portfolioAnalysis(stocks)))
+st.table(efficientFrontier(portfolioAnalysis(stocks)))
