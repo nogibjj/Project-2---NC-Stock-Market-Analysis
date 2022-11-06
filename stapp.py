@@ -38,7 +38,7 @@ import sys
 result = subprocess.run(
     ["ls", "-la"], capture_output=True, text=True
 )
-st.subheader(f"stdout: {result}")
-st.subheader("stderr: hard-coded here")
+st.subheader(f"stdout: {result.stdout}")
+st.subheader(f"stderr: {result.stdout}")
 
 # st.table(efficientFrontier(portfolioAnalysis(stocks)))
