@@ -8,51 +8,51 @@ import os
 from sqlalchemy import create_engine
 
 # Read in the data from csv files
-def stockData(stockList):
-    assert (
-        len(stockList) >= 2
-    ), f"Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}."
-    iteration = 0
-    for stocks in stockList:
-        match iteration:
-            case 0:
-                stockDf = pd.read_csv(
-                    stocks,
-                    parse_dates=["Date"],
-                    infer_datetime_format=True,
-                    index_col="Date",
-                    dayfirst=True,
-                )
-                iteration = 1
-                pass
-            case 1:
-                stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
-                    stocks,
-                    parse_dates=["Date"],
-                    infer_datetime_format=True,
-                    index_col="Date",
-                    dayfirst=True,
-                )["Close"]
-                stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
-                stockDf = stockDf.loc[
-                    :,
-                    list(map(lambda x: x.split("/")[-1].split(".")[0], stockList[:2]))[
-                        :2
-                    ],
-                ]
-                iteration = 2
-                pass
-            case 2:
-                stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
-                    stocks,
-                    parse_dates=["Date"],
-                    infer_datetime_format=True,
-                    index_col="Date",
-                    dayfirst=True,
-                )["Close"]
-                pass
-        pass
-    return stockDf.dropna()
+# def stockData(stockList):
+#     assert (
+#         len(stockList) >= 2
+#     ), f"Only 1 stock in the list. Please add more stocks to the list. Current stock list: {stockList}."
+#     iteration = 0
+#     for stocks in stockList:
+#         match iteration:
+#             case 0:
+#                 stockDf = pd.read_csv(
+#                     stocks,
+#                     parse_dates=["Date"],
+#                     infer_datetime_format=True,
+#                     index_col="Date",
+#                     dayfirst=True,
+#                 )
+#                 iteration = 1
+#                 pass
+#             case 1:
+#                 stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
+#                     stocks,
+#                     parse_dates=["Date"],
+#                     infer_datetime_format=True,
+#                     index_col="Date",
+#                     dayfirst=True,
+#                 )["Close"]
+#                 stockDf[stockList[0].split("/")[-1].split(".")[0]] = stockDf["Close"]
+#                 stockDf = stockDf.loc[
+#                     :,
+#                     list(map(lambda x: x.split("/")[-1].split(".")[0], stockList[:2]))[
+#                         :2
+#                     ],
+#                 ]
+#                 iteration = 2
+#                 pass
+#             case 2:
+#                 stockDf[stocks.split("/")[-1].split(".")[0]] = pd.read_csv(
+#                     stocks,
+#                     parse_dates=["Date"],
+#                     infer_datetime_format=True,
+#                     index_col="Date",
+#                     dayfirst=True,
+#                 )["Close"]
+#                 pass
+#         pass
+#     return stockDf.dropna()
 
 
 # Read in the data from sql database
@@ -74,21 +74,24 @@ def stockSQLdata(stockList):
         match iteration:
             case 0:
                 stockDf = pd.read_sql(
-                    f"SELECT date, close FROM {stocks}_performance;", connection,
-                    index_col="date"
+                    f"SELECT date, close FROM {stocks}_performance;",
+                    connection,
+                    index_col="date",
                 )
-                stockDf = stockDf.rename(columns = {'close': stocks})
+                stockDf = stockDf.rename(columns={"close": stocks})
                 iteration = 1
                 pass
             case 1:
                 stockDf = stockDf.merge(
                     pd.read_sql(
-                        f"SELECT date, close FROM {stocks}_performance;", connection, index_col="date"
+                        f"SELECT date, close FROM {stocks}_performance;",
+                        connection,
+                        index_col="date",
                     ),
                     how="outer",
                     on="date",
                 )
-                stockDf = stockDf.rename(columns = {'close': stocks})
+                stockDf = stockDf.rename(columns={"close": stocks})
                 pass
         pass
     return stockDf.dropna()
