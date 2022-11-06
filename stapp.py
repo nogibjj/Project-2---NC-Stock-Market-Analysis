@@ -45,7 +45,7 @@ annotation_layer = (
     alt.Chart(analysis)
     .mark_text(size=20, text="⬇", dx=-8, dy=-10, align="left")
     .encode(
-        x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y='Average Return',  tooltip=["Portfolio Make-up"],)
+        x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y='Average Return',  tooltip="Portfolio Make-up")
     .interactive()
 )
 
