@@ -27,18 +27,10 @@ st.title(r"Nick Carroll's Efficient Frontier App")
 stocks = st.text_input(
     "Please input the stock tickers of the portfolio that you are looking to optimize:",
     "AMZN AAPL MSFT",
-)
+).split(' ')
 
 
 
 st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
-
-import sys
-
-result = subprocess.run(
-    ["ls", "-la"], capture_output=True, text=True
-)
-st.subheader(f"stdout: {result.stdout}")
-st.subheader(f"stderr: {result.stdout}")
 
 st.table(marketanalysis.efficientFrontier(marketanalysis.portfolioAnalysis(stocks)))
