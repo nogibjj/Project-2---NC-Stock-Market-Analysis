@@ -20,7 +20,9 @@ try:
     plot = (
         alt.Chart(analysis)
         .mark_point()
-        .encode(x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y="Average Return")
+        .encode(
+            x=alt.X("Expected Risk", scale=alt.Scale(zero=False)), y="Average Return"
+        )
         .interactive()
     )
 
@@ -34,7 +36,6 @@ try:
         )
     )
 
-
     st.altair_chart(plot + plotTop, use_container_width=True)
 
     st.subheader(
@@ -42,8 +43,15 @@ try:
     )
     st.table(top15)
 except:
-    st.text("At least two tickers from the dataset must be included for this analysis.  Please read the text below regarding where the data comes from if there is any confusion as to why the tickers are not available.")
+    st.text("At least two tickers from the dataset must be included for this analysis.")
+    st.text("Please read the text below regarding where the data comes from.")
 
-st.text(
-    "This application uses the data from Kaggle dataset https://www.kaggle.com/datasets/paultimothymooney/stock-market-data.  There are 3,480 stock tickers that this application has information about from this dataset.  Many mutual funds and microcap stocks are not included in the available data.  This analysis ignores any tickers that aren't located in this data."
+st.write("This application uses the data from Kaggle dataset:")
+st.write("https://www.kaggle.com/datasets/paultimothymooney/stock-market-data.")
+st.write(
+    "There are 3,480 stock tickers that this application has information about from this dataset."
 )
+st.write(
+    "Many mutual funds and microcap stocks are not included in the available data."
+)
+st.write("This analysis ignores any tickers that aren't located in this data.")
