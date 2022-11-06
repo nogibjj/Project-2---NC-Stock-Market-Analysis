@@ -1,5 +1,5 @@
 # Project-3---NC-Stock-Market-Analysis
-This project creates a Streamlit Application for plotting the efficient frontier of a selected group of stocks.  Please visit this the application here:
+This project creates a Streamlit Application for plotting the efficient frontier of a selected group of stocks.  Please visit the application here:
 https://nick-carroll1-project-2---nc-stock-market-analysis-stapp-2mmroj.streamlit.app/
 
 This is a screenshot of what the application looks like:
