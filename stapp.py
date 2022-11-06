@@ -36,9 +36,9 @@ st.subheader(f"The top 15 portfolios for these stock tickers ({stocks}) are:")
 import sys
 
 result = subprocess.run(
-    ["ls"], capture_output=True, text=True
+    ["ls", "-la"], capture_output=True, text=True
 )
-st.subheader("stdout:", result.stdout)
-st.subheader("stderr:", result.stderr)
+st.subheader(f"stdout: {result}")
+st.subheader("stderr: hard-coded here")
 
 # st.table(efficientFrontier(portfolioAnalysis(stocks)))
